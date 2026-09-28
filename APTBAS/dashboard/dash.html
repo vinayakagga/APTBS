@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta charset="UTF-8">
+
+<title>APTBAS | Arm Controller</title>
+
+<style>
+
+:root {
+    --bg: #edf2f7;
+    --panel: #f7fafc;
+    --panel-strong: #ffffff;
+    --surface: #f4f7fa;
+    --text: #1e2a37;
+    --muted: #5f7182;
+    --line: #dfe8f0;
+    --line-strong: #ccd7e3;
+    --primary: #2f5d8f;
+    --primary-soft: #edf5ff;
+    --accent: #78a9db;
+    --success: #4da87e;
+    --danger: #d86666;
+    --shadow: rgba(19, 31, 42, 0.06);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html, body {
+    margin: 0;
+    min-height: 100%;
+}
+
+body {
+    font-family: "Segoe UI", Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    padding: 30px 18px;
+}
+
+.container {
+    max-width: 840px;
+    margin: 0 auto;
+    background: rgba(255,255,255,0.96);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    box-shadow: 0 8px 18px var(--shadow);
+    padding: 18px 22px 16px;
+}
+
+.brand-strip {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 2px 2px 10px;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 12px;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.brand-mark {
+    width: 11px;
+    height: 11px;
+    border-radius: 2px;
+    background: var(--primary);
+}
+
+.brand-text {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--primary);
+    font-weight: 800;
+}
+
+.kicker {
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 700;
+}
+
+.title-wrap {
+    margin: 8px 0 18px;
+}
+
+h1 {
+    margin: 0;
+    font-size: clamp(28px, 3vw, 36px);
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    color: var(--text);
+}
+
+.status {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 11px 14px;
+    border-radius: 10px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 14px;
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 8px;
+    background: var(--danger);
+}
+
+.status strong {
+    color: var(--text);
+    letter-spacing: normal;
+    text-transform: none;
+    font-weight: 700;
+}
+
+.status.connected {
+    border-color: rgba(77, 168, 126, 0.28);
+}
+
+.status.connected .status-dot {
+    background: var(--success);
+}
+
+.ip-panel {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 11px 12px;
+    margin-bottom: 14px;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+}
+
+.ip-label {
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--primary);
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.ip-input {
+    flex: 1;
+    min-width: 0;
+    border: 1px solid var(--line-strong);
+    border-radius: 8px;
+    background: #fff;
+    color: var(--text);
+    padding: 10px 12px;
+    font-size: 15px;
+    font-family: "Consolas", "Courier New", monospace;
+    outline: none;
+}
+
+.ip-input:focus {
+    border-color: var(--primary);
+}
+
+.ip-button {
+    padding: 10px 14px;
+    background: var(--primary);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: pointer;
+}
+
+.joint {
+    background: var(--panel-strong);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 12px;
+}
+
+.row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+label {
+    width: 72px;
+    color: var(--primary);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+input[type="range"] {
+    flex: 1;
+    -webkit-appearance: none;
+    appearance: none;
+    height: 7px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, var(--accent), var(--primary));
+    outline: none;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #fff;
+    border: 2px solid var(--primary);
+    cursor: pointer;
+}
+
+input[type="range"]::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #fff;
+    border: 2px solid var(--primary);
+    cursor: pointer;
+}
+
+.angle {
+    width: 72px;
+    text-align: right;
+    font-family: "Consolas", "Courier New", monospace;
+    color: var(--text);
+    font-size: 17px;
+    font-weight: 700;
+}
+
+.controls {
+    display: flex;
+    gap: 12px;
+    margin-top: 16px;
+}
+
+button {
+    flex: 1;
+    min-height: 48px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    transition: opacity 0.2s ease;
+}
+
+button:hover {
+    opacity: 0.96;
+}
+
+.home {
+    background: var(--primary);
+    color: white;
+}
+
+.stop {
+    background: var(--danger);
+    color: white;
+}
+
+@media (max-width: 640px) {
+    body {
+        padding: 18px 12px;
+    }
+
+    .container {
+        padding: 14px 14px 12px;
+    }
+
+    .brand-strip,
+    .status,
+    .ip-panel,
+    .row,
+    .controls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .brand {
+        justify-content: center;
+    }
+
+    .kicker {
+        text-align: center;
+    }
+
+    label {
+        width: auto;
+    }
+
+    .angle {
+        width: auto;
+        text-align: left;
+    }
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="brand-strip">
+        <div class="brand">
+            <span class="brand-mark"></span>
+            <span class="brand-text">APTBAS</span>
+        </div>
+        <div class="kicker">Arm Controller</div>
+    </div>
+
+    <div class="title-wrap">
+        <h1>APTBAS</h1>
+    </div>
+
+    <div class="status">
+        <span><span class="status-dot"></span>System Status</span>
+        <strong><span id="status">Disconnected</span></strong>
+    </div>
+
+    <div class="ip-panel">
+        <label class="ip-label" for="ipAddress">ESP32 IP</label>
+        <input
+            class="ip-input"
+            id="ipAddress"
+            type="text"
+            value="192.168.0.160"
+            spellcheck="false"
+        >
+        <button class="ip-button" type="button" onclick="applyIp()">Apply</button>
+    </div>
+
+
+<div class="joint">
+    <div class="row">
+
+        <label>CH0</label>
+
+        <input
+            type="range"
+            id="servo0"
+            min="10"
+            max="170"
+            value="90"
+        >
+
+        <span class="angle" id="value0">
+            90°
+        </span>
+
+    </div>
+</div>
+
+
+<div class="joint">
+    <div class="row">
+
+        <label>CH1</label>
+
+        <input
+            type="range"
+            id="servo1"
+            min="30"
+            max="170"
+            value="130"
+        >
+
+        <span class="angle" id="value1">
+            130°
+        </span>
+
+    </div>
+</div>
+
+
+<div class="joint">
+    <div class="row">
+
+        <label>CH2</label>
+
+        <input
+            type="range"
+            id="servo2"
+            min="30"
+            max="170"
+            value="130"
+        >
+
+        <span class="angle" id="value2">
+            130°
+        </span>
+
+    </div>
+</div>
+
+
+<div class="joint">
+    <div class="row">
+
+        <label>CH3</label>
+
+        <input
+            type="range"
+            id="servo3"
+            min="10"
+            max="170"
+            value="90"
+        >
+
+        <span class="angle" id="value3">
+            90°
+        </span>
+
+    </div>
+</div>
+
+
+<div class="joint">
+    <div class="row">
+
+        <label>CH4</label>
+
+        <input
+            type="range"
+            id="servo4"
+            min="10"
+            max="170"
+            value="90"
+        >
+
+        <span class="angle" id="value4">
+            90°
+        </span>
+
+    </div>
+</div>
+
+
+<br>
+
+<button class="home" onclick="home()">
+    HOME
+</button>
+
+<button class="stop" onclick="stopArm()">
+    STOP
+</button>
+
+</div>
+
+
+<script>
+
+let ESP32_IP = "192.168.0.160";
+
+let socket;
+
+function applyIp()
+{
+    let ipInput = document.getElementById("ipAddress");
+    let newIp = (ipInput.value || "").trim();
+
+    if (!newIp)
+        return;
+
+    ESP32_IP = newIp;
+    ipInput.value = newIp;
+
+    if (socket && socket.readyState === WebSocket.OPEN)
+    {
+        socket.close();
+    }
+    else
+    {
+        connect();
+    }
+}
+
+
+// =============================
+// Connect
+// =============================
+
+function connect()
+{
+    if (socket && socket.readyState === WebSocket.OPEN)
+        return;
+
+    socket = new WebSocket(
+        "ws://" + ESP32_IP + ":81"
+    );
+
+    socket.onopen = function()
+    {
+        document.getElementById("status")
+            .innerText = "Connected";
+        document.querySelector(".status")
+            .classList.add("connected");
+    };
+
+    socket.onclose = function()
+    {
+        document.getElementById("status")
+            .innerText = "Disconnected";
+        document.querySelector(".status")
+            .classList.remove("connected");
+
+        setTimeout(connect, 2000);
+    };
+
+    socket.onerror = function()
+    {
+        document.getElementById("status")
+            .innerText = "Error";
+    };
+}
+
+
+// =============================
+// Send joint command
+// =============================
+
+function sendJoint(channel, angle)
+{
+    if (!socket ||
+        socket.readyState !== WebSocket.OPEN)
+        return;
+
+    socket.send(
+        JSON.stringify({
+            type: "joint",
+            ch: channel,
+            angle: Number(angle)
+        })
+    );
+}
+
+
+// =============================
+// Slider setup
+// =============================
+
+for (let i = 0; i < 5; i++)
+{
+    let slider =
+        document.getElementById("servo" + i);
+
+    let value =
+        document.getElementById("value" + i);
+
+    slider.addEventListener(
+        "input",
+        function()
+        {
+            value.innerText =
+                this.value + "°";
+
+            sendJoint(i, this.value);
+        }
+    );
+}
+
+
+// =============================
+// Home
+// =============================
+
+function home()
+{
+    if (!socket ||
+        socket.readyState !== WebSocket.OPEN)
+        return;
+
+    socket.send(
+        JSON.stringify({
+            type: "home"
+        })
+    );
+
+    document.getElementById("servo0").value = 90;
+    document.getElementById("servo1").value = 130;
+    document.getElementById("servo2").value = 130;
+    document.getElementById("servo3").value = 90;
+    document.getElementById("servo4").value = 90;
+
+    updateLabels();
+}
+
+
+// =============================
+// Stop
+// =============================
+
+function stopArm()
+{
+    if (!socket ||
+        socket.readyState !== WebSocket.OPEN)
+        return;
+
+    socket.send(
+        JSON.stringify({
+            type: "stop"
+        })
+    );
+}
+
+
+// =============================
+// Update labels
+// =============================
+
+function updateLabels()
+{
+    for (let i = 0; i < 5; i++)
+    {
+        document.getElementById(
+            "value" + i
+        ).innerText =
+            document.getElementById(
+                "servo" + i
+            ).value + "°";
+    }
+}
+
+
+connect();
+
+</script>
+
+</body>
+</html>

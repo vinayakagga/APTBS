@@ -1,0 +1,16 @@
+5dof-robot-arm-control/
+├── README.md
+├── LICENSE
+├── .gitignore
+├── firmware/
+│   ├── handcntr.ino
+│   └── config.example.h
+├── dashboard/
+│   └── dash.html
+└── docs/
+    ├── wiring.md
+    ├── websocket-protocol.md
+    └── schematics/
+        ├── README.md
+        ├── system-block.svg
+        └── wiring.svg

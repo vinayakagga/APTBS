@@ -1,0 +1,8 @@
+# Local Wi-Fi credentials
+firmware/config.h
+
+# Arduino / editor generated files
+.vscode/
+*.bak
+.DS_Store
+Thumbs.db
